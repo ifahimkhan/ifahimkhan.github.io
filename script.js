@@ -122,7 +122,6 @@ const PHRASES = [
 
 function initTyping() {
   const typedEl = document.getElementById('typedText');
-  if (reducedMotion) return; // static first phrase stays in the HTML
 
   let phraseIndex = 0;
   let charIndex = PHRASES[0].length;
@@ -239,20 +238,26 @@ function initParticles() {
 // ============================================
 // COUNT-UP NUMBERS (rAF, eased, run once when visible)
 // ============================================
-function animateCount(el) {
+// Number changes aren't motion, so this runs even with reduced motion on.
+function animateCount(el, { delay = 0, duration = 1400 } = {}) {
   const target = parseInt(el.dataset.target, 10);
-  if (Number.isNaN(target) || reducedMotion) return;
-  const duration = 1200;
-  const start = performance.now();
-  function step(now) {
-    const t = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - t, 3);
-    el.textContent = String(Math.round(target * eased));
-    if (t < 1) requestAnimationFrame(step);
-  }
+  if (Number.isNaN(target)) return;
   el.textContent = '0';
-  requestAnimationFrame(step);
+  setTimeout(() => {
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = String(Math.round(target * eased));
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, delay);
 }
+
+// Hero card fades in on load; start its counters once it's visible so the count is seen
+const HERO_COUNT_DELAY_MS = 900;
+const HERO_COUNT_DURATION_MS = 1800;
 
 // ============================================
 // REVEAL ON SCROLL (+ skill bars, counters, timeline progress)
@@ -275,7 +280,8 @@ function initReveal() {
   const countObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      animateCount(entry.target);
+      const inHero = !!entry.target.closest('.hero');
+      animateCount(entry.target, inHero ? { delay: HERO_COUNT_DELAY_MS, duration: HERO_COUNT_DURATION_MS } : {});
       countObserver.unobserve(entry.target);
     });
   }, { threshold: 0.6 });
@@ -286,7 +292,7 @@ function initReveal() {
 
 function initTimelineProgress() {
   const timeline = document.getElementById('timeline');
-  if (!timeline || reducedMotion) return;
+  if (!timeline) return;
   new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) timeline.classList.add('drawn');
   }, { threshold: 0.15 }).observe(timeline);

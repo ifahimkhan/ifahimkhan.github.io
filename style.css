@@ -464,8 +464,9 @@ img { max-width: 100%; }
 }
 
 .card-stats {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 12px;
   align-items: center;
   margin-bottom: 28px;
   padding-bottom: 28px;
@@ -1054,15 +1055,14 @@ img { max-width: 100%; }
 @keyframes introUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes introRise { from { opacity: 0; transform: translateY(105%); } to { opacity: 1; transform: none; } }
 
+/* Reduced motion (also on when Windows "Animation effects" is off): keep calm effects —
+   fades, count-ups, typing — and drop movement: slides, floating, pulsing, particles. */
+@keyframes fadeOnly { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .js .reveal:not(.visible) { opacity: 1; }
+  .reveal.visible, .ready .intro, .ready .intro-rise { animation-name: fadeOnly; }
+  .floating-badge, .scroll-wheel, .marker-dot.current, .tag-dot { animation: none; }
+  .project-card:hover .project-mockup { transform: none; }
 }
 
 @keyframes fadeUp {
