@@ -3,26 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mohammed Fahim Khan — Senior Android Developer / Team Leader</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Mohammed Fahim Khan — Senior Android Engineer / Team Lead</title>
+  <meta name="description" content="Senior Android Engineer with 7+ years shipping production Kotlin apps: Jetpack Compose, Kotlin Multiplatform, BLE/RFID hardware, mobile security (CEH). Open to relocation." />
+  <meta name="theme-color" content="#050508" />
+  <link rel="canonical" href="https://ifahimkhan.github.io/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Mohammed Fahim Khan — Senior Android Engineer" />
+  <meta property="og:description" content="7+ years shipping Kotlin apps to Google Play. Compose, KMP, BLE/RFID, CEH-certified mobile security." />
+  <meta property="og:url" content="https://ifahimkhan.github.io/" />
+  <meta property="og:image" content="https://ifahimkhan.github.io/assets/images/ifahimkhan.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236c63ff'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='26' font-weight='700' fill='white' text-anchor='middle'%3EMFK%3C/text%3E%3C/svg%3E" />
+
+  <!-- Before first paint: apply saved theme (no dark/light flash) and arm the CSS entrance animations -->
+  <script>
+    (function (r) {
+      r.classList.add('js');
+      try { if (localStorage.getItem('theme') === 'light') r.setAttribute('data-theme', 'light'); } catch (e) {}
+      document.addEventListener('DOMContentLoaded', function () { requestAnimationFrame(function () { r.classList.add('ready'); }); });
+    })(document.documentElement);
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
 
-  <!-- CURSOR -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursorFollower"></div>
+  <a href="#about" class="skip-link">Skip to content</a>
 
-  <!-- LOADER -->
-  <div class="loader" id="loader">
-    <div class="loader-inner">
-      <div class="loader-code">
-        <span class="mono">&lt;loading/&gt;</span>
-        <div class="loader-bar"><div class="loader-fill"></div></div>
-      </div>
-    </div>
-  </div>
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- CURSOR (enabled by JS on fine-pointer devices only) -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-follower" id="cursorFollower" aria-hidden="true"></div>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
@@ -31,30 +48,34 @@
         <span class="logo-bracket">&lt;</span>MFK<span class="logo-bracket">/&gt;</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#about" data-text="About">About</a></li>
-        <li><a href="#skills" data-text="Skills">Skills</a></li>
-        <li><a href="#experience" data-text="Experience">Experience</a></li>
-        <li><a href="#projects" data-text="Projects">Projects</a></li>
-        <li><a href="#contact" data-text="Contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#impact">Impact</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#writing">Writing</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
       <a href="mailto:heyfahim@gmail.com" class="nav-cta">Hire Me</a>
-      <label class="theme-toggle" title="Toggle theme" aria-label="Toggle dark/light mode">
-        <input type="checkbox" id="themeToggle" />
+      <label class="theme-toggle" title="Toggle theme">
+        <input type="checkbox" id="themeToggle" aria-label="Toggle dark/light mode" />
         <span class="theme-toggle-track">
           <span class="icon-sun">☀️</span>
           <span class="icon-moon">🌙</span>
         </span>
         <span class="theme-toggle-thumb"></span>
       </label>
-      <button class="hamburger" id="hamburger" aria-label="Menu">
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
         <span></span><span></span><span></span>
       </button>
     </div>
     <div class="mobile-nav" id="mobileNav">
       <a href="#about" class="mobile-link">About</a>
+      <a href="#impact" class="mobile-link">Impact</a>
       <a href="#skills" class="mobile-link">Skills</a>
       <a href="#experience" class="mobile-link">Experience</a>
       <a href="#projects" class="mobile-link">Projects</a>
+      <a href="#writing" class="mobile-link">Writing</a>
       <a href="#contact" class="mobile-link">Contact</a>
     </div>
   </nav>
@@ -62,96 +83,98 @@
   <!-- HERO -->
   <section class="hero" id="home">
     <div class="hero-bg">
-      <canvas id="particleCanvas"></canvas>
+      <canvas id="particleCanvas" aria-hidden="true"></canvas>
     </div>
     <div class="hero-grid-lines"></div>
     <div class="hero-content">
       <div class="hero-left">
-        <div class="hero-tag">
+        <div class="hero-tag intro" style="--i:0">
           <span class="tag-dot"></span>
-          <span class="mono">Available for new opportunities</span>
+          <span class="mono">Open to senior Android roles · Ready to relocate</span>
         </div>
         <h1 class="hero-name">
-          <span class="name-line">Mohammed</span>
-          <span class="name-line accent">Fahim Khan</span>
+          <span class="name-line"><span class="intro-rise" style="--i:1">Mohammed</span></span>
+          <span class="name-line accent"><span class="intro-rise" style="--i:2">Fahim Khan</span></span>
         </h1>
-        <div class="hero-title">
+        <div class="hero-title intro" style="--i:3">
           <span class="mono title-prefix">&gt;&nbsp;</span>
-          <span class="typed-text" id="typedText"></span>
+          <span class="typed-text" id="typedText">Senior Android Engineer</span>
           <span class="cursor-blink">|</span>
         </div>
-        <p class="hero-bio">
-          Demonstrated software architect with <strong>7+ years</strong> of experience in
-          native and hybrid mobile development (Android/iOS), leading cross-functional teams,
-          and delivering high-performance mobile solutions at scale.
+        <p class="hero-bio intro" style="--i:4">
+          Senior Android Engineer with <strong>7+ years</strong> shipping production Kotlin apps to Google Play.
+          I built <strong>four native apps from scratch</strong>, evolved one across <strong>19 major versions</strong>,
+          and lead Android &amp; iOS engineers across Jetpack Compose, Kotlin Multiplatform and BLE/RFID hardware.
         </p>
-        <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">
+        <div class="hero-actions intro" style="--i:5">
+          <a href="#projects" class="btn btn-primary magnetic">
             <span>View Work</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+          <a href="./assets/Fahim_Resume.pdf" target="_blank" rel="noopener" class="btn btn-ghost magnetic">Download CV</a>
         </div>
-        <div class="hero-social">
-          <a href="https://www.linkedin.com/in/ifahimkhan/" target="_blank" class="social-chip" aria-label="LinkedIn">
+        <div class="hero-social intro" style="--i:6">
+          <a href="https://www.linkedin.com/in/ifahimkhan/" target="_blank" rel="noopener" class="social-chip" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
             LinkedIn
           </a>
-          <a href="https://github.com/ifahimkhan" target="_blank" class="social-chip" aria-label="GitHub">
+          <a href="https://github.com/ifahimkhan" target="_blank" rel="noopener" class="social-chip" aria-label="GitHub">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             GitHub
           </a>
-          <a href="https://twitter.com/I_fahimkhan" target="_blank" class="social-chip" aria-label="Twitter">
+          <a href="https://twitter.com/I_fahimkhan" target="_blank" rel="noopener" class="social-chip" aria-label="Twitter">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
             Twitter
           </a>
         </div>
       </div>
-      <div class="hero-right">
+      <div class="hero-right intro" style="--i:3">
         <div class="hero-card-wrap">
           <div class="hero-card">
             <div class="card-glow"></div>
             <div class="avatar-ring">
-              <div class="avatar"><img src="assets/images/ifahimkhan.jpg" alt="Mohammed Fahim Khan" class="avatar-img"></div>
+              <div class="avatar"><img src="assets/images/ifahimkhan.jpg" alt="Mohammed Fahim Khan" class="avatar-img" width="800" height="800" fetchpriority="high"></div>
             </div>
             <div class="card-stats">
               <div class="stat-item">
-                <span class="stat-num" data-target="7">0</span><span>+</span>
+                <span class="stat-num count-up" data-target="7">7</span><span>+</span>
                 <span class="stat-label">Years Exp</span>
               </div>
               <div class="stat-divider"></div>
               <div class="stat-item">
-                <span class="stat-num" data-target="30">0</span><span>+</span>
-                <span class="stat-label">Apps Built</span>
+                <span class="stat-num count-up" data-target="4">4</span>
+                <span class="stat-label">Apps Built 0→1</span>
               </div>
               <div class="stat-divider"></div>
               <div class="stat-item">
-                <span class="stat-num" data-target="5">0</span><span>M+</span>
-                <span class="stat-label">Users Reached</span>
+                <span class="stat-num count-up" data-target="19">19</span>
+                <span class="stat-label">Major Releases</span>
               </div>
             </div>
             <div class="card-tech-stack">
               <span class="tech-pill">Kotlin</span>
-              <span class="tech-pill">Android</span>
+              <span class="tech-pill">Compose</span>
+              <span class="tech-pill">KMP</span>
               <span class="tech-pill">Swift</span>
-              <span class="tech-pill">iOS</span>
-              <span class="tech-pill">BLE</span>
+              <span class="tech-pill">BLE / RFID</span>
             </div>
           </div>
           <div class="floating-badge badge-1">
-            <span>🏆</span> Mobile App Dev Expert
+            <span>🛡️</span> CEH Certified
           </div>
           <div class="floating-badge badge-2">
-            <span>🎯</span> 7+ Years
+            <span>🚀</span> Shipping since 2018
           </div>
         </div>
       </div>
     </div>
-    <a href="#about" class="scroll-down">
+    <a href="#about" class="scroll-down" aria-label="Scroll to About">
       <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
       <span class="mono">scroll</span>
     </a>
   </section>
+
+  <main>
 
   <!-- ABOUT -->
   <section class="about section" id="about">
@@ -160,34 +183,38 @@
         <span class="mono">01 /</span> About Me
       </div>
       <div class="about-grid">
-        <div class="about-text">
+        <div class="about-text reveal">
           <h2>Crafting <span class="accent">Mobile Experiences</span> That Matter</h2>
-          <p>I'm a Senior Android Developer / Team Leader based in Dubai with over <strong>7 years</strong> of hands-on experience building robust, scalable Android and iOS applications. I specialize in architecting clean, maintainable codebases using modern mobile development practices.</p>
-          <p>Currently at <strong>Tagway</strong> (JLT Dubai), I lead mobile development initiatives across Android and iOS, work with BLE hardware integrations, and mentor developers. My passion lies in solving complex technical challenges and delivering seamless user experiences.</p>
+          <p>I'm a Senior Android Developer / Team Leader at <strong>Tagway</strong> (Dubai, UAE), working remotely from Mumbai. Since 2018 I've owned the Tagway RFID platform's mobile apps end-to-end: architecture, releases and production reliability for apps running on handheld scanners in warehouses, laundries and hotels, where a wrong count or a crash costs a customer real money.</p>
+          <p>I modernise long-lived codebases without breaking delivery (XML to Jetpack Compose, screen by screen), share logic across platforms with <strong>Kotlin Multiplatform</strong>, and harden apps with a security mindset backed by my <strong>Certified Ethical Hacker</strong> credential. I use Claude Code and other AI tools every day to ship faster, and I write about Android to help other engineers.</p>
           <div class="about-highlights">
             <div class="highlight">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              Clean Architecture & SOLID Principles
+              Clean Architecture, MVVM &amp; unidirectional state (Coroutines / Flow)
             </div>
             <div class="highlight">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              Cross-functional Team Leadership & Mentoring
+              Team leadership: code review, design docs, mentoring Android &amp; iOS engineers
             </div>
             <div class="highlight">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              BLE & IoT Hardware Integration
+              BLE, RFID &amp; Zebra scanner hardware integration
             </div>
             <div class="highlight">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              Mobile App Security & Ethical Hacking (CEH)
+              On-device security: Keystore, EncryptedSharedPreferences, R8, OAuth2/JWT
+            </div>
+            <div class="highlight">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              AI-assisted development with Claude Code
             </div>
           </div>
-          <a href="./assets/Fahim_Resume.pdf" target="_blank" class="btn btn-primary">
+          <a href="./assets/Fahim_Resume.pdf" target="_blank" rel="noopener" class="btn btn-primary magnetic">
             <span>Download CV</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </a>
         </div>
-        <div class="about-visual">
+        <div class="about-visual reveal" style="--d:1">
           <div class="code-block">
             <div class="code-header">
               <div class="code-dots">
@@ -200,11 +227,11 @@
   <span class="c-keyword">val</span> <span class="c-var">name</span>: <span class="c-type">String</span> = <span class="c-string">"Mohammed Fahim Khan"</span>,
   <span class="c-keyword">val</span> <span class="c-var">role</span>: <span class="c-type">String</span> = <span class="c-string">"Sr. Android Dev / Team Lead"</span>,
   <span class="c-keyword">val</span> <span class="c-var">experience</span>: <span class="c-type">Int</span> = <span class="c-num">7</span>,
-  <span class="c-keyword">val</span> <span class="c-var">location</span>: <span class="c-type">String</span> = <span class="c-string">"Dubai, UAE"</span>,
-  <span class="c-keyword">val</span> <span class="c-var">email</span>: <span class="c-type">String</span> = <span class="c-string">"heyfahim@gmail.com"</span>,
-  <span class="c-keyword">val</span> <span class="c-var">skills</span>: <span class="c-type">List&lt;String&gt;</span> = <span class="c-func">listOf</span>(
-    <span class="c-string">"Kotlin"</span>, <span class="c-string">"Swift"</span>, <span class="c-string">"Java"</span>,
-    <span class="c-string">"Python"</span>, <span class="c-string">"BLE"</span>, <span class="c-string">"CEH"</span>
+  <span class="c-keyword">val</span> <span class="c-var">location</span>: <span class="c-type">String</span> = <span class="c-string">"Mumbai, India"</span>,
+  <span class="c-keyword">val</span> <span class="c-var">relocation</span>: <span class="c-type">Boolean</span> = <span class="c-num">true</span>,
+  <span class="c-keyword">val</span> <span class="c-var">stack</span>: <span class="c-type">List&lt;String&gt;</span> = <span class="c-func">listOf</span>(
+    <span class="c-string">"Kotlin"</span>, <span class="c-string">"Compose"</span>, <span class="c-string">"KMP"</span>,
+    <span class="c-string">"Swift"</span>, <span class="c-string">"BLE"</span>, <span class="c-string">"CEH"</span>
   ),
   <span class="c-keyword">val</span> <span class="c-var">openToWork</span>: <span class="c-type">Boolean</span> = <span class="c-num">true</span>
 )
@@ -220,11 +247,53 @@
     </div>
   </section>
 
+  <!-- IMPACT -->
+  <section class="impact section" id="impact">
+    <div class="container">
+      <div class="section-label">
+        <span class="mono">02 /</span> Impact
+      </div>
+      <h2>Results in <span class="accent">Production</span></h2>
+      <div class="impact-grid">
+        <div class="impact-card reveal" style="--d:0">
+          <div class="impact-num mono"><span class="count-up" data-target="50">50</span>%</div>
+          <div class="impact-label">Smaller app</div>
+          <p>Cut Tagway Ice download size from 80MB to 40MB.</p>
+        </div>
+        <div class="impact-card reveal" style="--d:1">
+          <div class="impact-num mono">v<span class="count-up" data-target="19">19</span></div>
+          <div class="impact-label">Major versions shipped</div>
+          <p>Evolved Tagway Ice from v1 to v19 on Google Play (2018–2024).</p>
+        </div>
+        <div class="impact-card reveal" style="--d:2">
+          <div class="impact-num mono"><span class="count-up" data-target="25">25</span>%</div>
+          <div class="impact-label">Better modularity</div>
+          <p>Custom lint rules, SOLID design and Compose on MVVM made the code more modular and easier to maintain.</p>
+        </div>
+        <div class="impact-card reveal" style="--d:3">
+          <div class="impact-num mono">−<span class="count-up" data-target="15">15</span>%</div>
+          <div class="impact-label">Post-release bugs</div>
+          <p>Hardened real-time BLE and REST data sync with RFID hardware, backed by unit, integration and Espresso tests.</p>
+        </div>
+        <div class="impact-card reveal" style="--d:4">
+          <div class="impact-num mono"><span class="count-up" data-target="16">16</span>KB</div>
+          <div class="impact-label">Page-size ready</div>
+          <p>Migrated NDK libraries to 16KB page alignment for Android 15+ before the Google Play deadline.</p>
+        </div>
+        <div class="impact-card reveal" style="--d:5">
+          <div class="impact-num mono">0 ANRs</div>
+          <div class="impact-label">Release blockers cleared</div>
+          <p>Eliminated ANRs and memory leaks through profiling, and fixed crashes that blocked the Android 14 release before it shipped.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SKILLS -->
   <section class="skills section" id="skills">
     <div class="container">
       <div class="section-label">
-        <span class="mono">02 /</span> Skills & Tools
+        <span class="mono">03 /</span> Skills &amp; Tools
       </div>
       <h2>Technical <span class="accent">Arsenal</span></h2>
       <div class="skills-layout">
@@ -233,7 +302,7 @@
           <div class="skill-group reveal">
             <div class="skill-group-header">
               <div class="skill-icon">📱</div>
-              <h3>Software / Languages</h3>
+              <h3>Languages</h3>
             </div>
             <div class="skill-bars">
               <div class="skill-bar-item">
@@ -249,7 +318,7 @@
                 <div class="skill-track"><div class="skill-fill" data-width="75"></div></div>
               </div>
               <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Dart</span><span class="skill-pct">70%</span></div>
+                <div class="skill-bar-info"><span>Dart (Flutter)</span><span class="skill-pct">70%</span></div>
                 <div class="skill-track"><div class="skill-fill" data-width="70"></div></div>
               </div>
               <div class="skill-bar-item">
@@ -261,51 +330,38 @@
 
           <div class="skill-group reveal">
             <div class="skill-group-header">
-              <div class="skill-icon">🗄️</div>
-              <h3>Databases & Backend</h3>
+              <div class="skill-icon">🏗️</div>
+              <h3>Android &amp; Architecture</h3>
             </div>
-            <div class="skill-bars">
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Firebase</span><span class="skill-pct">90%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="90"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Supabase</span><span class="skill-pct">80%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="80"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>SQLite / Room</span><span class="skill-pct">88%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="88"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>MySQL</span><span class="skill-pct">75%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="75"></div></div>
-              </div>
+            <div class="skill-chips">
+              <span>Jetpack Compose</span><span>Material 3</span><span>Kotlin Multiplatform</span><span>Coroutines &amp; Flow</span>
+              <span>StateFlow</span><span>MVVM</span><span>Clean Architecture</span><span>Hilt / Dagger</span>
+              <span>Room</span><span>WorkManager</span><span>NDK</span><span>Gradle product flavors</span>
+              <span>Custom lint rules</span><span>Offline-first sync</span>
             </div>
           </div>
 
           <div class="skill-group reveal">
             <div class="skill-group-header">
-              <div class="skill-icon">🔧</div>
-              <h3>DevOps & Tools</h3>
+              <div class="skill-icon">🔌</div>
+              <h3>Backend, Hardware &amp; Data</h3>
             </div>
-            <div class="skill-bars">
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Git / GitHub</span><span class="skill-pct">90%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="90"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>GitHub Actions / CI/CD</span><span class="skill-pct">80%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="80"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Jenkins</span><span class="skill-pct">75%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="75"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>SVN</span><span class="skill-pct">70%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="70"></div></div>
-              </div>
+            <div class="skill-chips">
+              <span>REST / Retrofit</span><span>WebSockets</span><span>OAuth2 &amp; JWT</span><span>Azure-hosted services</span>
+              <span>BLE</span><span>RFID</span><span>Zebra scanner SDK</span><span>Firebase</span>
+              <span>Supabase</span><span>SQLite</span><span>MySQL</span>
+            </div>
+          </div>
+
+          <div class="skill-group reveal">
+            <div class="skill-group-header">
+              <div class="skill-icon">🧪</div>
+              <h3>Quality, Release &amp; Observability</h3>
+            </div>
+            <div class="skill-chips">
+              <span>Unit &amp; integration tests</span><span>Espresso</span><span>GitHub Actions</span><span>Jenkins</span>
+              <span>Play Console staged rollouts</span><span>Remote Config feature flags</span><span>Crashlytics</span>
+              <span>Firebase Analytics</span><span>ANR &amp; memory-leak triage</span><span>Performance profiling</span>
             </div>
           </div>
 
@@ -314,19 +370,9 @@
               <div class="skill-icon">🔒</div>
               <h3>Security</h3>
             </div>
-            <div class="skill-bars">
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Mobile App Security</span><span class="skill-pct">85%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="85"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>Secure Storage & Best Practices</span><span class="skill-pct">85%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="85"></div></div>
-              </div>
-              <div class="skill-bar-item">
-                <div class="skill-bar-info"><span>CEH (Ethical Hacking)</span><span class="skill-pct">80%</span></div>
-                <div class="skill-track"><div class="skill-fill" data-width="80"></div></div>
-              </div>
+            <div class="skill-chips">
+              <span>Android Keystore</span><span>EncryptedSharedPreferences</span><span>BiometricPrompt</span>
+              <span>R8 / ProGuard</span><span>SQLCipher</span><span>Secrets out of the binary</span><span>Mobile pen testing</span><span>CEH</span>
             </div>
           </div>
 
@@ -336,29 +382,27 @@
           <h3 class="mono">// Tech Tags</h3>
           <div class="tech-cloud">
             <span class="tag tag-lg">Kotlin</span>
+            <span class="tag tag-lg">Jetpack Compose</span>
             <span class="tag">Coroutines</span>
-            <span class="tag tag-lg">Android SDK</span>
+            <span class="tag tag-lg">KMP</span>
+            <span class="tag">Flow</span>
             <span class="tag tag-lg">Swift</span>
             <span class="tag">iOS SDK</span>
-            <span class="tag">Jetpack</span>
-            <span class="tag">LiveData</span>
-            <span class="tag tag-lg">Firebase</span>
-            <span class="tag">Supabase</span>
-            <span class="tag">REST APIs</span>
+            <span class="tag">Android SDK</span>
             <span class="tag tag-lg">BLE</span>
+            <span class="tag">RFID</span>
             <span class="tag tag-lg">MVVM</span>
             <span class="tag">Room</span>
             <span class="tag">Retrofit</span>
-            <span class="tag">Python</span>
-            <span class="tag">Dart</span>
-            <span class="tag">Dagger/Hilt</span>
-            <span class="tag">Git</span>
-            <span class="tag">Jenkins</span>
-            <span class="tag">GitHub Actions</span>
+            <span class="tag">Hilt</span>
+            <span class="tag">Flutter</span>
+            <span class="tag">Firebase</span>
+            <span class="tag">WebSockets</span>
             <span class="tag tag-lg">Clean Arch</span>
             <span class="tag">SOLID</span>
-            <span class="tag">Unit Testing</span>
-            <span class="tag">Gradle</span>
+            <span class="tag">Espresso</span>
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Claude Code</span>
             <span class="tag">CEH</span>
           </div>
 
@@ -375,7 +419,7 @@
               <div class="cert-icon">🤖</div>
               <div>
                 <strong>Career Essentials in Generative AI</strong>
-                <span>Microsoft & LinkedIn — 2024</span>
+                <span>Microsoft &amp; LinkedIn — 2024</span>
               </div>
             </div>
             <div class="cert-item">
@@ -383,6 +427,27 @@
               <div>
                 <strong>NPTEL Programming in Java</strong>
                 <span>NPTEL — 2024</span>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-icon">🏅</div>
+              <div>
+                <strong>Android Enterprise Associate</strong>
+                <span>Android — 2023</span>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-icon">🔍</div>
+              <div>
+                <strong>Android App Security: A Structured Approach to Pen Testing</strong>
+                <span>LinkedIn — 2023</span>
+              </div>
+            </div>
+            <div class="cert-item">
+              <div class="cert-icon">🔐</div>
+              <div>
+                <strong>Ethical Hacking: Mobile Devices &amp; Platforms</strong>
+                <span>LinkedIn — 2023</span>
               </div>
             </div>
             <div class="cert-item">
@@ -414,20 +479,6 @@
               </div>
             </div>
             <div class="cert-item">
-              <div class="cert-icon">🔐</div>
-              <div>
-                <strong>Ethical Hacking: Mobile Devices & Platforms</strong>
-                <span>LinkedIn — 2023</span>
-              </div>
-            </div>
-            <div class="cert-item">
-              <div class="cert-icon">🔍</div>
-              <div>
-                <strong>Android App Security: Pen Testing</strong>
-                <span>LinkedIn — 2023</span>
-              </div>
-            </div>
-            <div class="cert-item">
               <div class="cert-icon">📐</div>
               <div>
                 <strong>Learning SOLID Programming Principles</strong>
@@ -435,10 +486,10 @@
               </div>
             </div>
             <div class="cert-item">
-              <div class="cert-icon">🏅</div>
+              <div class="cert-icon">💙</div>
               <div>
-                <strong>Android Enterprise Associate</strong>
-                <span>Android — 2023</span>
+                <strong>The Complete 2020 Flutter Development Bootcamp with Dart</strong>
+                <span>Udemy — 2020</span>
               </div>
             </div>
           </div>
@@ -451,10 +502,11 @@
   <section class="experience section" id="experience">
     <div class="container">
       <div class="section-label">
-        <span class="mono">03 /</span> Experience
+        <span class="mono">04 /</span> Experience
       </div>
       <h2>Work <span class="accent">Timeline</span></h2>
-      <div class="timeline">
+      <div class="timeline" id="timeline">
+        <div class="timeline-progress" aria-hidden="true"></div>
 
         <div class="timeline-item reveal">
           <div class="timeline-marker">
@@ -464,21 +516,66 @@
             <div class="timeline-header">
               <div>
                 <div class="job-title">Senior Android Developer / Team Leader</div>
-                <div class="company">Tagway — JLT Dubai</div>
+                <div class="company">Tagway — Dubai, UAE (remote from Mumbai)</div>
               </div>
               <div class="job-meta">
-                <span class="job-date">10/2018 — Present</span>
+                <span class="job-date">Oct 2018 — Present</span>
                 <span class="job-badge current-badge">Current</span>
               </div>
             </div>
-            <div class="job-desc">
-              <p>Engineered robust Android and iOS applications by leveraging modern frameworks and collaborating with cross-functional teams to ensure seamless integration and rapid resolution of complex technical challenges.</p>
-              <p>Instituted rigorous code review processes ensuring consistent delivery of high-quality releases. Directed collaborative Agile sprints, assigning tasks and tracking progress to advance timely feature delivery.</p>
-              <p>End-to-end mobile development cycles by introducing scalable architectures and mentoring developers, leading to accelerated deployment timelines and enhanced application reliability.</p>
+            <ul class="job-points">
+              <li>Built and shipped <strong>four native Android apps from scratch</strong> for the Tagway RFID platform (Ice, Linen, Smart Tray, AMS) and own each one end-to-end. Evolved Tagway Ice from <strong>v1 to v19</strong> on Google Play, with client-specific features delivered through Gradle product flavors.</li>
+              <li>Leading the incremental <strong>XML → Jetpack Compose</strong> migration on MVVM with unidirectional state (Coroutines, Flow, Room) and Hilt. Custom lint rules enforce the architecture boundaries, improving modularity by <strong>25%</strong>.</li>
+              <li>Improve performance across the whole stack: cut the app from <strong>80MB to 40MB</strong>, eliminated ANRs and memory leaks, fixed crashes that blocked the Android 14 release, and moved the NDK libraries to 16KB page alignment.</li>
+              <li>Lower release risk with Play Console staged rollouts, Remote Config feature flags, Crashlytics and custom event tracking. Built Arabic/English localisation and FCM push notifications.</li>
+              <li>Integrate with Azure-hosted backends over REST using OAuth2/JWT, and write API specs together with the server engineers. Mentor Android and iOS engineers through code review, pairing and design docs.</li>
+            </ul>
+            <div class="milestones">
+              <div class="milestone"><span class="mono">2018</span>Tagway Ice v1 on Google Play</div>
+              <div class="milestone"><span class="mono">2020</span>Flutter inventory reporting app</div>
+              <div class="milestone"><span class="mono">2024</span>Tagway Ice v19</div>
+              <div class="milestone"><span class="mono">2025</span>Compose migration · iOS app launch</div>
+              <div class="milestone"><span class="mono">Now</span>Tagway Connect (KMP) in production</div>
             </div>
             <div class="job-skills">
-              <span>Kotlin</span><span>Swift</span><span>MVVM</span><span>BLE</span><span>RFID</span><span>Firebase</span><span>Agile</span><span>Team Lead</span>
+              <span>Kotlin</span><span>Compose</span><span>KMP</span><span>Swift</span><span>MVVM</span><span>BLE</span><span>RFID</span><span>Firebase</span><span>Agile</span><span>Team Lead</span>
             </div>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker">
+            <div class="marker-dot"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="job-title">Master's, Information Technology</div>
+                <div class="company">CGPA 7.7</div>
+              </div>
+              <div class="job-meta">
+                <span class="job-date">2016 — 2018</span>
+              </div>
+            </div>
+            <p class="edu-note">Coursework: Artificial Intelligence, Advanced Computer Networks, Cloud Architecture, Software Engineering</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal">
+          <div class="timeline-marker">
+            <div class="marker-dot"></div>
+          </div>
+          <div class="timeline-card">
+            <div class="timeline-header">
+              <div>
+                <div class="job-title">Bachelor's, Information Technology</div>
+                <div class="company">CGPA 7.4</div>
+              </div>
+              <div class="job-meta">
+                <span class="job-date">2013 — 2016</span>
+              </div>
+            </div>
+            <p class="edu-note">Coursework: Java, Data Structures &amp; Algorithms, Database Systems, Software Testing</p>
           </div>
         </div>
 
@@ -490,25 +587,61 @@
   <section class="projects section" id="projects">
     <div class="container">
       <div class="section-label">
-        <span class="mono">04 /</span> Projects
+        <span class="mono">05 /</span> Projects
       </div>
       <h2>Featured <span class="accent">Work</span></h2>
+
+      <div class="project-filters" role="tablist" aria-label="Filter projects">
+        <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="filter-btn" data-filter="work" role="tab" aria-selected="false">Professional</button>
+        <button class="filter-btn" data-filter="oss" role="tab" aria-selected="false">Personal &amp; Open Source</button>
+      </div>
+
       <div class="projects-grid">
 
-        <div class="project-card featured reveal">
+        <div class="project-card featured reveal" data-cat="work">
+          <div class="project-visual" style="background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%)">
+            <div class="project-mockup">📱</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">01</div>
+            <span class="project-tag">Android · Team Lead</span>
+            <h3>Tagway Ice — Android</h3>
+            <p>RFID inventory app published on Google Play that syncs with RFID hardware over BLE and REST in real time. I've owned it from v1 to v19 and am now migrating it to Jetpack Compose.</p>
+            <div class="project-tech">
+              <span>Kotlin</span><span>Compose</span><span>BLE / RFID</span><span>Room</span><span>Hilt</span><span>Firebase</span>
+            </div>
+            <div class="project-highlights">
+              <ul>
+                <li>15% fewer post-release bugs. Unit, integration and Espresso coverage</li>
+                <li>Download size halved (80MB → 40MB); NDK libraries 16KB-aligned</li>
+                <li>Keystore, EncryptedSharedPreferences, BiometricPrompt, R8</li>
+                <li>Arabic/English localisation, FCM, Remote Config staged rollouts</li>
+              </ul>
+            </div>
+            <div class="project-links">
+              <a href="https://play.google.com/store/apps/details?id=com.tagwayrfid.ice&hl=en" target="_blank" rel="noopener" class="proj-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Play Store
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card featured reveal" data-cat="work">
           <div class="project-visual" style="background: linear-gradient(135deg, #6c63ff 0%, #a855f7 100%)">
             <div class="project-mockup">🍎</div>
           </div>
           <div class="project-body">
-            <div class="project-number mono">01</div>
-            <span class="project-tag">iOS App</span>
+            <div class="project-number mono">02</div>
+            <span class="project-tag">iOS · Team Lead</span>
             <h3>Tagway Ice — iOS</h3>
-            <p>Designed and built the native Tagway Ice iOS app for phones and tablets. Built seamless BLE connectivity optimizing real-time data sync between mobiles and hardware using advanced architectural patterns. Led a team of four developers providing technical guidance.</p>
+            <p>Native iOS app for phones and tablets, built from scratch. I led a team of four developers and kept its behaviour consistent with the Android app, including BLE sync with the RFID hardware.</p>
             <div class="project-tech">
-              <span>Swift</span><span>BLE</span><span>REST</span><span>iOS SDK</span><span>Git</span>
+              <span>Swift</span><span>Xcode</span><span>BLE</span><span>REST</span><span>iOS SDK</span>
             </div>
             <div class="project-links">
-              <a href="https://apps.apple.com/in/app/tagway-ice/id6747594821" target="_blank" class="proj-link">
+              <a href="https://apps.apple.com/in/app/tagway-ice/id6747594821" target="_blank" rel="noopener" class="proj-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 App Store
               </a>
@@ -516,118 +649,201 @@
           </div>
         </div>
 
-        <div class="project-card featured reveal">
-          <div class="project-visual" style="background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%)">
-            <div class="project-mockup">📱</div>
-          </div>
-          <div class="project-body">
-            <div class="project-number mono">02</div>
-            <span class="project-tag">Android App</span>
-            <h3>Tagway Ice — Android</h3>
-            <p>Engineered seamless BLE connectivity for Tagway Ice, optimizing real-time data synchronization between mobile devices and hardware. Implemented rigorous testing frameworks and devised robust BLE communication modules ensuring secure and efficient data exchange.</p>
-            <div class="project-tech">
-              <span>Kotlin</span><span>BLE</span><span>MVVM</span><span>Testing</span><span>OOP</span>
-            </div>
-            <div class="project-links">
-              <a href="https://play.google.com/store/apps/details?id=com.tagwayrfid.ice&hl=en" target="_blank" class="proj-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Play Store
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="project-card featured reveal">
-          <div class="project-visual" style="background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)">
-            <div class="project-mockup">🔮</div>
+        <div class="project-card reveal" data-cat="work">
+          <div class="project-visual" style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)">
+            <div class="project-mockup">🧺</div>
           </div>
           <div class="project-body">
             <div class="project-number mono">03</div>
-            <span class="project-tag">Android App</span>
-            <h3>MindReading</h3>
-            <p>A Kotlin-based Android app that performs a classic mathematical mind-reading trick, guiding users through a number puzzle and revealing the predicted symbol with a polished, mystical UI.</p>
+            <span class="project-tag">Android</span>
+            <h3>Tagway Linen</h3>
+            <p>RFID linen and uniform tracking app for laundries, hotels and uniform providers. It scans tags through every stage of the laundry cycle, reports gaps between expected and actual stock, and tracks wash cycles for hygiene compliance.</p>
             <div class="project-tech">
-              <span>Kotlin</span><span>Jetpack Compose</span><span>Material 3</span><span>ViewModel</span><span>StateFlow</span>
-            </div>
-            <div class="project-highlights">
-              <ul>
-                <li>Two-digit number prediction with animated reveal flow</li>
-                <li>Jetpack Compose UI with Material 3 theming</li>
-                <li>ViewModel + StateFlow for reactive state management</li>
-                <li>Custom mystic dark theme for distinctive UX</li>
-              </ul>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/ifahimkhan/MindReading" target="_blank" class="proj-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                GitHub
-              </a>
-              <a href="https://play.google.com/store/apps/details?id=ml.fahimkhan.myapplication" target="_blank" class="proj-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Play Store
-              </a>
+              <span>Kotlin</span><span>Room</span><span>Offline-first</span><span>RFID</span>
             </div>
           </div>
         </div>
 
-        <div class="project-card featured reveal">
-          <div class="project-visual" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)">
-            <div class="project-mockup">♟️</div>
+        <div class="project-card reveal" data-cat="work">
+          <div class="project-visual" style="background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)">
+            <div class="project-mockup">🔗</div>
           </div>
           <div class="project-body">
             <div class="project-number mono">04</div>
-            <span class="project-tag">Android App</span>
-            <h3>ChessTimerApp</h3>
-            <p>A professional Android chess clock built in Kotlin for tournament play, casual games, and practice sessions with accurate time tracking and flexible time controls.</p>
+            <span class="project-tag">Kotlin Multiplatform</span>
+            <h3>Tagway Connect</h3>
+            <p>Production KMP client that sends scanned RFID tags to connected systems over WebSockets in real time. Data models and network protocols are shared across platforms, and the app goes straight to customers, outside the app stores.</p>
             <div class="project-tech">
-              <span>Kotlin</span><span>Android</span>
-            </div>
-            <div class="project-highlights">
-              <ul>
-                <li>Dual countdown timers for both players</li>
-                <li>Presets for bullet, blitz, and rapid formats</li>
-                <li>Custom time settings with increment and delay options</li>
-                <li>Pause, resume, reset, and arbiter-style adjustments</li>
-              </ul>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/ifahimkhan/ChessTimerApp" target="_blank" class="proj-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                GitHub
-              </a>
-              <a href="https://play.google.com/store/apps/details?id=com.fahim.chesstimer" target="_blank" class="proj-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                Play Store
-              </a>
+              <span>KMP</span><span>Kotlin</span><span>WebSockets</span><span>RFID</span>
             </div>
           </div>
         </div>
 
-        <div class="project-card featured reveal">
+        <div class="project-card reveal" data-cat="work">
+          <div class="project-visual" style="background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%)">
+            <div class="project-mockup">📊</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">05</div>
+            <span class="project-tag">Flutter · 2020</span>
+            <h3>Inventory Reporting App</h3>
+            <p>Cross-platform inventory reporting app I delivered within 6 months of learning Flutter. It uses Firebase Analytics, Crashlytics and Remote Config, and keeps API secrets out of the shipped binary.</p>
+            <div class="project-tech">
+              <span>Flutter</span><span>Dart</span><span>Firebase</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="work">
+          <div class="project-visual" style="background: linear-gradient(135deg, #64748b 0%, #334155 100%)">
+            <div class="project-mockup">🏷️</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">06</div>
+            <span class="project-tag">Android</span>
+            <h3>Tagway Smart Tray &amp; AMS</h3>
+            <p>Two more native Android apps I built from scratch and own end-to-end on the Tagway RFID platform, delivered alongside Ice and Linen.</p>
+            <div class="project-tech">
+              <span>Kotlin</span><span>RFID</span><span>REST</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card featured reveal" data-cat="oss">
           <div class="project-visual" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%)">
             <div class="project-mockup">🛡️</div>
           </div>
           <div class="project-body">
-            <div class="project-number mono">05</div>
-            <span class="project-tag">Android Security App</span>
+            <div class="project-number mono">07</div>
+            <span class="project-tag">Android Security · Open Source</span>
             <h3>ShieldCheck</h3>
-            <p>A native Android security and privacy auditing app that assesses installed apps, device settings, and network exposure through a structured security dashboard.</p>
+            <p>Native Android app that audits security and privacy. It checks installed apps, device settings and network exposure, and shows the results on a security dashboard.</p>
             <div class="project-tech">
-              <span>Kotlin</span><span>Jetpack Compose</span><span>Material 3</span><span>Clean Architecture</span><span>MVVM</span><span>Hilt</span><span>Room</span><span>SQLCipher</span><span>WorkManager</span>
+              <span>Kotlin</span><span>Compose</span><span>Clean Architecture</span><span>Hilt</span><span>Room</span><span>SQLCipher</span><span>WorkManager</span>
             </div>
             <div class="project-highlights">
               <ul>
-                <li>Audits installed apps and classifies permissions by risk level</li>
-                <li>Checks root status, encryption, screen lock, and USB debugging</li>
-                <li>Scans Wi-Fi security, VPN status, and open ports</li>
-                <li>Privacy dashboard with aggregate scoring and scan history</li>
+                <li>Classifies app permissions by risk level</li>
+                <li>Checks root status, encryption, screen lock and USB debugging</li>
+                <li>Scans Wi-Fi security, VPN status and open ports</li>
+                <li>Privacy score with scan history</li>
               </ul>
             </div>
             <div class="project-links">
-              <a href="https://github.com/ifahimkhan/ShieldCheck" target="_blank" class="proj-link">
+              <a href="https://github.com/ifahimkhan/ShieldCheck" target="_blank" rel="noopener" class="proj-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                 GitHub
               </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #f43f5e 0%, #ec4899 100%)">
+            <div class="project-mockup">💊</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">08</div>
+            <span class="project-tag">KMP · Android &amp; iOS</span>
+            <h3>PillTime</h3>
+            <p>Fully offline medication reminder built with Kotlin Multiplatform and Compose Multiplatform. It fires an exact-time local reminder every day, with no accounts, no network and no cloud.</p>
+            <div class="project-tech">
+              <span>KMP</span><span>Compose Multiplatform</span><span>Offline-first</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/PillTime" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #eab308 0%, #f97316 100%)">
+            <div class="project-mockup">🎱</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">09</div>
+            <span class="project-tag">Compose Multiplatform</span>
+            <h3>BingoGame</h3>
+            <p>Real-time multiplayer 90-ball Bingo for Android and iOS. A Ktor WebSocket server runs on the caller's device, and players join rooms peer-to-peer by scanning a QR code.</p>
+            <div class="project-tech">
+              <span>CMP</span><span>Ktor</span><span>WebSockets</span><span>QR</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/BingoGame" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%)">
+            <div class="project-mockup">📈</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">10</div>
+            <span class="project-tag">Android Library</span>
+            <h3>HeapMonitor</h3>
+            <p>Drop-in Android debug overlay that shows live JVM and native heap usage plus ART GC counters. Install it from JitPack with no code changes.</p>
+            <div class="project-tech">
+              <span>Kotlin</span><span>ART</span><span>JitPack</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/HeapMonitor" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)">
+            <div class="project-mockup">📍</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">11</div>
+            <span class="project-tag">Android</span>
+            <h3>MapApp</h3>
+            <p>Live location tracker. A device shares its GPS through Firebase Realtime Database, and anyone can follow broadcasting devices on Google Maps.</p>
+            <div class="project-tech">
+              <span>Kotlin</span><span>Compose</span><span>Google Maps</span><span>FCM</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/MapApp" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%)">
+            <div class="project-mockup">🔮</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">12</div>
+            <span class="project-tag">Android · Google Play</span>
+            <h3>MindReading</h3>
+            <p>Kotlin app built around a classic maths mind-reading trick. The user follows a number puzzle and the app reveals the predicted symbol with a polished, mystical UI.</p>
+            <div class="project-tech">
+              <span>Compose</span><span>Material 3</span><span>StateFlow</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/MindReading" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+              <a href="https://play.google.com/store/apps/details?id=ml.fahimkhan.myapplication" target="_blank" rel="noopener" class="proj-link">Play Store</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="oss">
+          <div class="project-visual" style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)">
+            <div class="project-mockup">♟️</div>
+          </div>
+          <div class="project-body">
+            <div class="project-number mono">13</div>
+            <span class="project-tag">Android · Google Play</span>
+            <h3>ChessTimerApp</h3>
+            <p>Professional chess clock with presets for bullet, blitz and rapid, increment and delay settings, and arbiter-style adjustments.</p>
+            <div class="project-tech">
+              <span>Kotlin</span><span>Android</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/ifahimkhan/ChessTimerApp" target="_blank" rel="noopener" class="proj-link ghost">GitHub</a>
+              <a href="https://play.google.com/store/apps/details?id=com.fahim.chesstimer" target="_blank" rel="noopener" class="proj-link">Play Store</a>
             </div>
           </div>
         </div>
@@ -636,16 +852,59 @@
     </div>
   </section>
 
+  <!-- WRITING -->
+  <section class="writing section" id="writing">
+    <div class="container">
+      <div class="section-label">
+        <span class="mono">06 /</span> Writing &amp; Teaching
+      </div>
+      <h2><span class="accent count-up" data-target="16">16</span><span class="accent">+</span> Articles on Android &amp; AI</h2>
+      <p class="section-intro">I write about Android internals, concurrency and AI tooling on LinkedIn. Explaining a decision clearly is half of making it, and it's also how I mentor.</p>
+      <div class="writing-grid">
+        <a class="article-card reveal" style="--d:0" href="https://github.com/ifahimkhan/MasterCoroutines" target="_blank" rel="noopener">
+          <span class="article-kind mono">GitHub · 10 chapters</span>
+          <h3>MasterCoroutines</h3>
+          <p>A 10-chapter guide to Kotlin Coroutines, from the basics to structured concurrency.</p>
+        </a>
+        <a class="article-card reveal" style="--d:1" href="https://www.linkedin.com/in/ifahimkhan/recent-activity/articles/" target="_blank" rel="noopener">
+          <span class="article-kind mono">LinkedIn · 6-part series</span>
+          <h3>Kotlin Coroutines &amp; Concurrency</h3>
+          <p>A six-part series on coroutines, Flow and concurrency on Android.</p>
+        </a>
+        <a class="article-card reveal" style="--d:2" href="https://www.linkedin.com/in/ifahimkhan/recent-activity/articles/" target="_blank" rel="noopener">
+          <span class="article-kind mono">LinkedIn · AI tooling</span>
+          <h3>Running Claude Code for Free Using NVIDIA API</h3>
+          <p>Guides to running Claude Code against alternative model APIs.</p>
+        </a>
+        <a class="article-card reveal" style="--d:3" href="https://www.linkedin.com/in/ifahimkhan/recent-activity/articles/" target="_blank" rel="noopener">
+          <span class="article-kind mono">LinkedIn · Internals</span>
+          <h3>AIDL, Binder IPC &amp; the Choreographer</h3>
+          <p>Deep dives into Android IPC, the frame pipeline and Android 14 Broadcast Receivers.</p>
+        </a>
+        <a class="article-card reveal" style="--d:4" href="https://www.linkedin.com/in/ifahimkhan/recent-activity/articles/" target="_blank" rel="noopener">
+          <span class="article-kind mono">LinkedIn · Architecture</span>
+          <h3>Dagger 2 &amp; Compose vs XML</h3>
+          <p>Practical notes on dependency injection and migrating from XML to Compose.</p>
+        </a>
+        <a class="article-card reveal" style="--d:5" href="https://github.com/ifahimkhan/kotlin-mastery" target="_blank" rel="noopener">
+          <span class="article-kind mono">GitHub · Course</span>
+          <h3>kotlin-mastery</h3>
+          <p>Kotlin from zero to coroutines: runnable lessons, tested exercises and capstone projects.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section class="contact section" id="contact">
     <div class="container">
       <div class="section-label">
-        <span class="mono">05 /</span> Contact
+        <span class="mono">07 /</span> Contact
       </div>
       <div class="contact-grid">
         <div class="contact-left reveal">
           <h2>Let's <span class="accent">Build Together</span></h2>
-          <p>I'm open to senior Android roles, consulting opportunities, and interesting collaborations. Drop me a message — I usually respond within 24 hours.</p>
+          <p>I'm open to senior Android and mobile roles and ready to relocate (visa sponsorship required). I'm also open to consulting and interesting collaborations. I usually reply within 24 hours.</p>
           <div class="contact-items">
             <a href="mailto:heyfahim@gmail.com" class="contact-item">
               <div class="contact-item-icon">
@@ -665,55 +924,63 @@
                 <span class="contact-value">(+91) 7977-803-286</span>
               </div>
             </a>
+            <div class="contact-item">
+              <div class="contact-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <span class="contact-label mono">Location</span>
+                <span class="contact-value">Mumbai, India · Open to relocation</span>
+              </div>
+            </div>
           </div>
           <div class="contact-social">
-            <a href="https://www.linkedin.com/in/ifahimkhan/" target="_blank" class="social-pill">LinkedIn</a>
-            <a href="https://github.com/ifahimkhan" target="_blank" class="social-pill">GitHub</a>
-            <a href="https://twitter.com/I_fahimkhan" target="_blank" class="social-pill">Twitter</a>
+            <a href="https://www.linkedin.com/in/ifahimkhan/" target="_blank" rel="noopener" class="social-pill">LinkedIn</a>
+            <a href="https://github.com/ifahimkhan" target="_blank" rel="noopener" class="social-pill">GitHub</a>
+            <a href="https://twitter.com/I_fahimkhan" target="_blank" rel="noopener" class="social-pill">Twitter</a>
           </div>
         </div>
-        <div class="contact-right reveal">
-          <form class="contact-form" id="contactForm">
+        <div class="contact-right reveal" style="--d:1">
+          <form class="contact-form" id="contactForm" novalidate>
             <div class="form-group">
-              <label class="mono">// Your Name</label>
-              <input type="text" placeholder="John Doe" required />
+              <label class="mono" for="cfName">// Your Name</label>
+              <input id="cfName" name="name" type="text" placeholder="John Doe" autocomplete="name" maxlength="100" required />
             </div>
             <div class="form-group">
-              <label class="mono">// Email Address</label>
-              <input type="email" placeholder="john@example.com" required />
+              <label class="mono" for="cfEmail">// Email Address</label>
+              <input id="cfEmail" name="email" type="email" placeholder="john@example.com" autocomplete="email" maxlength="200" required />
             </div>
             <div class="form-group">
-              <label class="mono">// Subject</label>
-              <input type="text" placeholder="Project Collaboration" />
+              <label class="mono" for="cfSubject">// Subject</label>
+              <input id="cfSubject" name="subject" type="text" placeholder="Project Collaboration" maxlength="150" />
             </div>
             <div class="form-group">
-              <label class="mono">// Message</label>
-              <textarea rows="5" placeholder="Tell me about your project..." required></textarea>
+              <label class="mono" for="cfMessage">// Message</label>
+              <textarea id="cfMessage" name="message" rows="5" placeholder="Tell me about your project..." maxlength="2000" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary btn-full">
               <span>Send Message</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
-            <div class="form-success" id="formSuccess">
-              Message sent! I'll get back to you soon. 🚀
-            </div>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
           </form>
         </div>
       </div>
     </div>
   </section>
 
+  </main>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
         <span class="mono footer-logo">&lt;MFK /&gt;</span>
-        <p class="footer-copy">Designed & built with ❤️ by Mohammed Fahim Khan &copy; 2026</p>
+        <p class="footer-copy">Designed &amp; built with ❤️ by Mohammed Fahim Khan &copy; 2026</p>
         <a href="#home" class="footer-top mono">back_to_top↑</a>
       </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>

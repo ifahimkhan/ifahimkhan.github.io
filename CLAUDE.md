@@ -14,9 +14,9 @@ No build system, package manager, or framework. Pure HTML, CSS, and vanilla Java
 
 | File | Purpose |
 |------|---------|
-| `index.html` | Main portfolio page — all sections (hero, about, skills, experience, projects, contact) live here as inline HTML |
+| `index.html` | Main portfolio page — all sections (hero, about, impact, skills, experience, projects, writing, contact) live here as inline HTML. A tiny inline `<head>` script sets the saved theme and the `js`/`ready` classes before first paint |
 | `style.css` | Primary stylesheet (root-level) — design system variables, all component styles, light/dark themes, responsive breakpoints |
-| `script.js` | All interactivity — theme toggle, loader, custom cursor, navbar scroll, hamburger menu, typing animation, scroll-reveal, stat counters, contact form |
+| `script.js` | All interactivity (loaded with `defer`, no loader screen) — theme toggle, custom cursor (fine pointers only), scroll progress/navbar, hamburger, typing, particle canvas (pauses off-screen), scroll-reveal, count-ups, project filters, card spotlight, mailto contact form. Respects `prefers-reduced-motion` |
 | `styles/main.css` | **Legacy** stylesheet from an older version of the site; not linked by `index.html` |
 
 ### Standalone pages
@@ -41,7 +41,8 @@ Theme switching is JS-driven (`script.js`): toggling the `#themeToggle` checkbox
 ## Key UI Patterns
 
 - **Projects section**: Cards are hardcoded HTML in `index.html` (`<div class="project-card featured reveal">`), not rendered from a JS data array. To add/remove projects, edit the HTML directly inside `<div class="projects-grid">`.
-- **Scroll animations**: Elements with class `reveal` are animated on scroll via IntersectionObserver in `script.js`.
+- **Scroll animations**: Elements with class `reveal` animate in via IntersectionObserver; set `style="--d:N"` to stagger siblings. Numbers with class `count-up` + `data-target` count up when visible.
+- **Project filters**: each `.project-card` has `data-cat="work"` or `data-cat="oss"`, matched by the filter buttons.
 - **Responsive breakpoints**: `1024px` (tablet — hero card hidden, grids collapse to single column) and `768px` (mobile — hamburger nav, stacked layouts).
 
 ## Deployment

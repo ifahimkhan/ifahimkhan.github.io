@@ -53,11 +53,37 @@ body {
   color: var(--text);
   line-height: 1.7;
   overflow-x: hidden;
-  cursor: none;
 }
 
 a { text-decoration: none; color: inherit; }
-button { cursor: none; border: none; background: none; font-family: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+.has-cursor body, .has-cursor a, .has-cursor button, .has-cursor label, .has-cursor .theme-toggle-track { cursor: none; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.skip-link {
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 10001;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+
+/* Scroll progress (transform-only, compositor friendly) */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 1001;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--green));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
 input, textarea, select { font-family: inherit; }
 img { max-width: 100%; }
 
@@ -96,42 +122,20 @@ img { max-width: 100%; }
   transform: translate(0, 0);
   transition: border-color 0.2s ease, width 0.2s ease, height 0.2s ease;
 }
+.cursor { margin: -5px 0 0 -5px; transition: scale 0.2s ease; }
+.cursor-follower { margin: -18px 0 0 -18px; }
 .cursor.click { scale: 2; }
-.cursor-follower.hover { width: 48px; height: 48px; border-color: var(--accent); margin: -6px 0 0 -6px; }
+.cursor.down { scale: 0.6; }
+.cursor-follower.hover { width: 48px; height: 48px; border-color: var(--accent); margin: -24px 0 0 -24px; }
 
-@media (hover: none) { .cursor, .cursor-follower { display: none; } }
+.cursor, .cursor-follower { display: none; opacity: 0; }
+.has-cursor .cursor, .has-cursor .cursor-follower { display: block; }
+.cursor-active .cursor, .cursor-active .cursor-follower { opacity: 1; }
 
-/* ============================================
-   LOADER
-   ============================================ */
-.loader {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.6s ease, visibility 0.6s;
-}
-.loader.gone { opacity: 0; visibility: hidden; }
-.loader-code { text-align: center; }
-.loader-code .mono { font-size: 20px; color: var(--accent); display: block; margin-bottom: 24px; }
-.loader-bar {
-  width: 240px;
-  height: 3px;
-  background: rgba(108,99,255,0.15);
-  border-radius: 99px;
-  overflow: hidden;
-}
-.loader-fill {
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 99px;
-  animation: loadFill 1.8s cubic-bezier(0.4,0,0.2,1) forwards;
-}
-@keyframes loadFill { to { width: 100%; } }
+/* Grid children default to min-width:auto, so wide content (the about.kt <pre>) would
+   stretch the column past the viewport and make mobile browsers zoom out the whole page */
+.about-grid > *, .skills-layout > *, .contact-grid > *, .projects-grid > *,
+.impact-grid > *, .writing-grid > * { min-width: 0; }
 
 /* ============================================
    NAVBAR
@@ -360,7 +364,9 @@ img { max-width: 100%; }
   margin-bottom: 20px;
 }
 .name-line { display: block; }
-.name-line.accent {
+/* Gradient lives on the inner (animated) span: background-clip:text on a parent
+   doesn't paint through a transformed child */
+.name-line.accent .intro-rise {
   background: linear-gradient(135deg, var(--accent), var(--accent2), #f5576c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1005,18 +1011,6 @@ img { max-width: 100%; }
 .form-group input::placeholder,
 .form-group textarea::placeholder { color: var(--text3); }
 
-.form-success {
-  display: none;
-  padding: 16px;
-  background: rgba(0,255,136,0.08);
-  border: 1px solid rgba(0,255,136,0.2);
-  border-radius: 10px;
-  font-size: 14px;
-  color: var(--green);
-  font-weight: 600;
-  text-align: center;
-}
-.form-success.show { display: block; animation: fadeUp 0.4s ease; }
 
 /* ============================================
    FOOTER
@@ -1041,17 +1035,34 @@ img { max-width: 100%; }
 /* ============================================
    REVEAL ANIMATIONS
    ============================================ */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+/* Hidden only when JS is running (class set in <head>), so no-JS visitors see everything.
+   Uses an animation with `backwards` fill: once finished, normal styles apply again and
+   hover transforms keep working. --d staggers siblings. */
+.js .reveal:not(.visible) { opacity: 0; }
+.reveal.visible { animation: revealUp 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--d, 0) * 90ms) backwards; }
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(36px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
 }
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
+
+/* Hero entrance — pure CSS, runs on first paint without waiting for script.js */
+.name-line { overflow: hidden; padding-bottom: 0.06em; }
+.intro-rise { display: inline-block; }
+.js:not(.ready) .intro, .js:not(.ready) .intro-rise { opacity: 0; }
+.ready .intro { animation: introUp 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i, 0) * 90ms) backwards; }
+.ready .intro-rise { animation: introRise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i, 0) * 110ms) backwards; }
+@keyframes introUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes introRise { from { opacity: 0; transform: translateY(105%); } to { opacity: 1; transform: none; } }
+
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .js .reveal:not(.visible) { opacity: 1; }
 }
 
 @keyframes fadeUp {
@@ -1111,19 +1122,11 @@ img { max-width: 100%; }
   box-shadow: 0 2px 8px rgba(91,82,232,0.4);
 }
 
-/* Smooth theme transition — exclude cursor elements */
-body, header, section, footer, nav, main,
-.navbar, .hero, .about, .skills, .experience, .projects, .contact, .footer,
-.card, .hero-card, .timeline-card, .project-card, .skill-group,
-.tech-tags-panel, .code-block, .contact-form, .contact-item,
-.tag, .cert-item, .social-chip, .social-pill, .job-skills span,
-.project-tech span, .tech-pill, .card-tech-stack, .footer-inner,
-.section-label, .about-text, .about-visual, h1, h2, h3, h4, h5, p, a,
-input, textarea, select, label, .nav-cta, .btn, .mobile-nav,
-.announcement-bar, .hero-tag, .floating-badge, .stat-item, .stat-label,
-.loader, .loader-bar, .loader-fill, .certs-box, .highlight,
-.scroll-down, .theme-toggle-track, .theme-toggle-thumb {
-  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.3s ease;
+/* Smooth theme transition — applied only while toggling (class set by script.js),
+   so it never overrides component hover / reveal transitions */
+.theme-switching *:not(.cursor):not(.cursor-follower),
+.theme-switching *::before, .theme-switching *::after {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.3s ease !important;
 }
 
 /* Light mode specific overrides */
@@ -1137,7 +1140,6 @@ input, textarea, select, label, .nav-cta, .btn, .mobile-nav,
 }
 [data-theme="light"] .code-block { background: #1e1e2e; }
 [data-theme="light"] .code-body code { filter: brightness(1.1); }
-[data-theme="light"] .loader { background: var(--bg); }
 [data-theme="light"] .navbar.scrolled { background: rgba(245,245,251,0.92); }
 [data-theme="light"] .floating-badge { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
 [data-theme="light"] .hero-card { box-shadow: 0 8px 40px rgba(91,82,232,0.1); }
@@ -1145,8 +1147,227 @@ input, textarea, select, label, .nav-cta, .btn, .mobile-nav,
 [data-theme="light"] .project-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
 
 /* ============================================
+   NAV STATE
+   ============================================ */
+.nav-links a.active { color: var(--accent); }
+.nav-links a.active::after { width: 100%; }
+.hamburger span { transition: transform var(--transition), opacity var(--transition); }
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+.mobile-nav { background: var(--bg); border-bottom: 1px solid var(--border); }
+.mobile-nav.open { animation: fadeUp 0.25s ease; }
+@media (max-width: 768px) { .scroll-down { display: none; } }
+
+/* Shared section heading style for new sections */
+.impact > .container > h2,
+.writing > .container > h2 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+}
+.section-intro { color: var(--text2); font-size: 16px; max-width: 720px; margin-bottom: 48px; }
+
+/* ============================================
+   IMPACT
+   ============================================ */
+.impact { background: var(--bg); }
+.impact > .container > h2 { margin-bottom: 48px; }
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.impact-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.impact-card:hover { transform: translateY(-4px); border-color: var(--border2); }
+.impact-num {
+  font-size: clamp(34px, 4vw, 46px);
+  font-weight: 700;
+  line-height: 1.1;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.impact-label { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+.impact-card p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+/* ============================================
+   SKILL CHIPS
+   ============================================ */
+.skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-chips span {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text2);
+  background: rgba(108,99,255,0.06);
+  border: 1px solid rgba(108,99,255,0.14);
+  transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.skill-chips span:hover { transform: translateY(-2px); color: var(--accent); border-color: var(--border2); }
+
+/* ============================================
+   EXPERIENCE ADDITIONS
+   ============================================ */
+.timeline { --tl-pad: 40px; padding-left: var(--tl-pad); }
+.timeline-progress {
+  position: absolute;
+  top: 6px; bottom: 0;
+  left: calc(var(--tl-pad) - 34px);
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent2) 60%, transparent);
+  opacity: 0.5;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.timeline.drawn .timeline-progress { transform: scaleY(1); }
+.marker-dot.current { animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(108,99,255,0.45); }
+  70%  { box-shadow: 0 0 0 10px rgba(108,99,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(108,99,255,0); }
+}
+
+.job-points { list-style: none; display: grid; gap: 12px; margin-bottom: 24px; }
+.job-points li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.job-points li::before { content: "▹"; position: absolute; left: 0; color: var(--accent); }
+.job-points strong { color: var(--text); }
+
+.milestones {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.milestone {
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(108,99,255,0.05);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text2);
+  line-height: 1.45;
+}
+.milestone .mono { display: block; color: var(--accent); font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+.edu-note { font-size: 14px; color: var(--text2); }
+
+/* ============================================
+   PROJECT FILTERS + SPOTLIGHT
+   ============================================ */
+.project-filters { display: flex; flex-wrap: wrap; gap: 10px; margin: -28px 0 36px; }
+.filter-btn {
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text2);
+  font-size: 13px;
+  font-family: var(--mono);
+  transition: var(--transition);
+}
+.filter-btn:hover { border-color: var(--border2); color: var(--text); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.project-card { position: relative; }
+.project-card.is-hidden { display: none; }
+
+.project-card::after,
+.impact-card::after,
+.article-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(108,99,255,0.12), transparent 45%);
+}
+.project-card:hover::after,
+.impact-card:hover::after,
+.article-card:hover::after { opacity: 1; }
+
+.project-mockup { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.project-card:hover .project-mockup { transform: scale(1.12) rotate(-4deg); }
+
+/* ============================================
+   WRITING
+   ============================================ */
+.writing { background: var(--bg2); }
+.writing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.article-card {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  padding: 26px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: transform var(--transition), border-color var(--transition);
+}
+.article-card:hover { transform: translateY(-4px); border-color: var(--border2); }
+.article-kind { display: block; font-size: 11.5px; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 10px; }
+.article-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.35; }
+.article-card p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+/* ============================================
+   CONTACT FORM STATUS
+   ============================================ */
+.form-status {
+  display: none;
+  padding: 14px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+.form-status.show { display: block; animation: fadeUp 0.4s ease; }
+.form-status.ok { background: rgba(0,204,106,0.08); border: 1px solid rgba(0,204,106,0.25); color: var(--green); }
+.form-status.error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+
+[data-theme="light"] .project-card::after,
+[data-theme="light"] .impact-card::after,
+[data-theme="light"] .article-card::after {
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(91,82,232,0.08), transparent 45%);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
+@media (max-width: 1024px) {
+  .impact-grid, .writing-grid { grid-template-columns: repeat(2, 1fr); }
+  .milestones { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .timeline { --tl-pad: 24px; }
+  .impact-grid, .writing-grid { grid-template-columns: 1fr; }
+  .milestones { grid-template-columns: repeat(2, 1fr); }
+  .project-filters { margin-top: -36px; }
+  .projects-grid { grid-template-columns: 1fr; }
+}
 @media (max-width: 1024px) {
   .hero-content { grid-template-columns: 1fr; gap: 40px; }
   .hero-right { display: none; }
